@@ -36,7 +36,7 @@ async function runTradingAlgorithm(driver, log, db) {
         await driver.navigate().refresh();
         
         // Fetch updated elements
-        [ NIFTY50, MACD, SIGNAL ] = await fetchData(driver);
+        ({ NIFTY50, MACD, SIGNAL } = await fetchData(driver));
 
         let message = '';
         // Trading logic
@@ -65,6 +65,7 @@ async function runTradingAlgorithm(driver, log, db) {
         maxCapital = Math.max(currCap, maxCapital);
         currentProfit = currCap - startCap;
         await log(`
+          time : ${new Date().toLocaleString()}
           Update (${t}minutes later):
           ${message}
             *NIFTY50: ${NIFTY50}

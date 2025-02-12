@@ -48,3 +48,56 @@ CurrentProfit: 0
 
 Waiting 0.97 minute(s) to update...
 Updating...4
+Updating...3
+Updating...2
+Updating...1
+Updating...
+Updated - NIFTY50: 22856.4
+ MACD: -62.36
+ SIGNAL: -56.04
+
+NO BUY NO SELL CONTINUE...
+
+Current Capital: 228444.5
+MAX Capital: 228444.5
+Shares: 0 
+InBalance: 228444.5
+CurrentProfit: 0
+
+Waiting 0.97 minute(s) to update...
+Updating...4
+Updating...3
+Updating...2
+Updating...1
+Updating...
+Updated - NIFTY50: 22857.85
+ MACD: -59.98
+ SIGNAL: -56.83
+
+NO BUY NO SELL CONTINUE...
+
+Current Capital: 228444.5
+MAX Capital: 228444.5
+Shares: 0 
+InBalance: 228444.5
+CurrentProfit: 0
+
+Waiting 0.97 minute(s) to update...
+Updating...4
+Updating...3
+Updating...2
+Updating...1
+Updating...
+Updated - NIFTY50: 22889.85
+ MACD: -54.88
+ SIGNAL: -56.44
+
+BUY LOW: shares bought 4, current shares 4
+
+Current Capital: 228444.5
+MAX Capital: 228444.5
+Shares: 4 
+InBalance: 136885.1
+CurrentProfit: 0
+
+Waiting 0.97 minute(s) to update...

@@ -4,4 +4,4 @@ node_modules
 Logs/*
 .env
 Logs/
-
+Logs/*txt

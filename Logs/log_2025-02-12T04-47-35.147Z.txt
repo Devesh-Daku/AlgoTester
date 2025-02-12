@@ -1,0 +1,50 @@
+DATE, TIME of initialization: 2/12/2025, 10:17:35 AM
+User: username
+Email: email
+
+
+Initial - NIFTY50: 22844.45 
+MACD: -64.36
+SIGNAL: -48.52
+ Initial Capital: 228444.5
+ Shares: 0
+ CurrentProfit: 0
+
+Waiting 0.97 minute(s) to update...
+Updating...4
+Updating...3
+Updating...2
+Updating...1
+Updating...
+Updated - NIFTY50: 22830.6
+ MACD: -65.92
+ SIGNAL: -52
+
+NO BUY NO SELL CONTINUE...
+
+Current Capital: 228444.5
+MAX Capital: 228444.5
+Shares: 0 
+InBalance: 228444.5
+CurrentProfit: 0
+
+Waiting 0.97 minute(s) to update...
+Updating...4
+Updating...3
+Updating...2
+Updating...1
+Updating...
+Updated - NIFTY50: 22856.15
+ MACD: -64.34
+ SIGNAL: -54.47
+
+NO BUY NO SELL CONTINUE...
+
+Current Capital: 228444.5
+MAX Capital: 228444.5
+Shares: 0 
+InBalance: 228444.5
+CurrentProfit: 0
+
+Waiting 0.97 minute(s) to update...
+Updating...4

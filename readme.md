@@ -2,62 +2,48 @@
 
 ## Setup and Installation
 
-### 1. Install Dependencies
+### 1. Clone the Repository
+```sh
+git clone <repo-url>
+cd AlgoTester
+```
+
+### 2. Install Dependencies
 Run the following command to install required dependencies:
 ```sh
 npm install
 ```
 
-### 2. Install WebDriver (Geckodriver for Firefox)
-#### Check if Geckodriver is installed:
-```sh
-geckodriver --version
-```
-#### If not installed, install it using:
-```sh
-sudo apt update
-sudo apt install firefox-geckodriver
-```
-Alternatively, you can download it manually from:
-[Geckodriver Releases](https://github.com/mozilla/geckodriver/releases)
-
-### 3. Install Selenium WebDriver
-Ensure Selenium WebDriver is installed:
-```sh
-npm install selenium-webdriver
-```
-
-### 4. Verify Firefox Installation
-Check if Firefox is installed:
-```sh
-firefox --version
-```
-If not installed, install it using:
-```sh
-sudo apt install firefox
-```
-
-## Browser Configuration
-- By default, the bot is set to use **Firefox**.
-- If you wish to use **Google Chrome**, ensure Chrome is installed and replace `'firefox'` with `'chrome'` in `setupBrowser.js`.
-
-## Running the Application
+### 3. Running the Application
 Start the bot using:
 ```sh
 node main.js
 ```
 
-## Using Cloud Browsers (LambdaTest)
-- The bot supports **LambdaTest** for cloud-based browser execution.
-- Free tier offers **5 hours per month**.
-- Credentials are required for cloud execution.
-- When using LambdaTest, ensure continuous browser interaction to prevent it from sleeping.
+## Description
+
+This application fetches **live NIFTY50 data** from **Yahoo Finance** and uses historical price data to calculate:
+- **MACD (Moving Average Convergence Divergence) Line**
+- **Signal Line**
+
+These values are then passed to an **algorithm** that runs a **paper trading simulation**, logging all trades based on predefined trading rules.
+
+### 📝 **Paper Trading Log**
+- The bot **simulates trading** using the **calculated MACD and Signal Line**.
+- Every trade (buy/sell decision) is **recorded in a log file**.
+- This log can be used to **analyze performance** throughout the trading day.
+
+## How It Works
+1. **Fetches real-time NIFTY50 data** from **Yahoo Finance**.
+2. **Calculates MACD and Signal Line** using historical price data.
+3. **Runs a trading algorithm** to decide whether to **BUY, SELL, or HOLD**.
+4. **Logs all transactions** in a **paper trading log file** for analysis.
 
 ## Alternative Methods Tried
-- **Axios & Cheerio** were tested for web scraping, but the laptop's IP got blocked by the target website.
-- The bot currently relies on **Selenium WebDriver** for data extraction, which remains the preferred method based on algorithm needs and live data availability.
+- **Axios & Cheerio** were tested for web scraping but resulted in an **IP block** from the target website.
+- **Selenium WebDriver** was used earlier but is **now removed** for a more efficient API-based approach.
 
 ## Notes
-- Modify the code accordingly if using a different browser.
-- Ensure the respective WebDriver (e.g., **ChromeDriver** for Chrome) is installed.
+- No browser or WebDriver setup is required anymore.
+- Ensure you have a **stable internet connection** for live data fetching.
 

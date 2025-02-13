@@ -1,5 +1,5 @@
-const fs = require('fs');
-const path = require('path');
+import fs  from 'fs';
+import path  from 'path';
 
 function setupLogger(userName, email) {
   const date = new Date();
@@ -22,4 +22,4 @@ function setupLogger(userName, email) {
   };
 }
 
-module.exports = { setupLogger };
+export  { setupLogger };

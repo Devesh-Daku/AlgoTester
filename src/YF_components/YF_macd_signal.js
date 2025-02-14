@@ -13,35 +13,34 @@ async function getNiftyData(interval = "5m") {
         }
 
         // Calculate MACD Line properly by aligning indexes
-        const ema12 = calculateEMA(closePrices, 12);
-        const ema26 = calculateEMA(closePrices, 26);
+        const ema12 = await calculateEMA(closePrices, 12);
+        const ema26 = await calculateEMA(closePrices, 26);
         let macdLine = ema12.slice(-ema26.length).map((value, index) => value - ema26[index]);
 
         // Ensure Signal Line has enough data
         let signalLine;
         if (macdLine.length >= 9) {
-            signalLine = calculateEMA(macdLine, 9);
+            signalLine = await  calculateEMA(macdLine, 9);
         } else {
             signalLine = new Array(macdLine.length).fill(macdLine[0]); // Prevent undefined issue
         }
 
-        const macdDelta = -.962;
-        const signalDelta = -1.37;
+        // const macdDelta = -.962;
+        
+        // const signalDelta = -1.37;
         // const macdDelta = 0;
         // const singalDelta = 0;
-        macdLine = macdLine.map(value => value + macdDelta);
-        signalLine = signalLine.map(value => value + signalDelta);
+        // macdLine = macdLine.map(value => value + macdDelta);
+        // signalLine = signalLine.map(value => value + signalDelta);
 
-        const macdHistogram = macdLine.map((value, index) => value - (signalLine[index] || 0));
 
-        // Get the latest index safely
         const latestIndex = macdLine.length - 1;
         const signalIndex = signalLine.length - 1; // Ensure correct index
 
         return {
             macd: macdLine[latestIndex],
             signal: signalLine[signalIndex] || macdLine[latestIndex], // Fallback to MACD if undefined
-            histogram: macdHistogram[latestIndex]
+            // histogram: macdHistogram[latestIndex]
         };
     } catch (error) {
         return { error: `Failed to fetch MACD data: ${error.message}` };

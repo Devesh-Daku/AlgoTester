@@ -11,19 +11,30 @@ async function runTradingAlgorithm(log,interval=5) {
     let NIFTY50 = nifty50;
     let MACD = macd;
     let SIGNAL = signal;
+
+    if(MACD <0 && SIGNAL <0 ) {
+      if(MACD < SIGNAL) shares = 2;
+      else shares = 5;
+    }
+    else if(MACD >0 && SIGNAL >0) {
+      if(MACD < SIGNAL) shares = 4;
+      else shares = 8;
+    } 
+    else if(MACD > 0 && SIGNAL < 0) shares = 8;
+    else shares = 2;
     // Initialize trading variables
-    balance = 5* NIFTY50;
-    const startCap = 2*balance;
-    maxCapital = balance;
+    balance = (10-shares)* NIFTY50;
+    const startCap = 10*NIFTY50;
+    maxCapital = startCap;
     prevN50 = NIFTY50;
     prevMACD = MACD;
     prevSIGNAL = SIGNAL;
 
-    await log(`Initilized Values :
-      NIFTY50: ${NIFTY50} 
-      MACD: ${MACD}
-      SIGNAL: ${SIGNAL}
-      MaxCapital: assuming 10x of initial Nifty value  : (${balance}) 5 in share 5 in blalance.
+    await log(`🚀Initilized Values :
+      💰NIFTY50: ${NIFTY50} 
+      📉 MACD: ${MACD}
+      📈SIGNAL: ${SIGNAL}
+      MaxCapital: assuming 10x of initial Nifty value  : (${balance}) ${shares} in shares ${10-shares} in blalance.
         Balance: ${balance}
         Shares: asuming initial ${shares} shares we have.
       CurrentProfit: ${currentProfit}
@@ -32,7 +43,7 @@ async function runTradingAlgorithm(log,interval=5) {
     while (true) {
       try {
         await log(`Waiting ${interval} minute(s) to update...`);
-        await new Promise(resolve => setTimeout(resolve,  interval*60000));
+        await new Promise(resolve => setTimeout(resolve,  interval*60000 -1));
         // process.stdout.write('\x1b[1A\x1b[K');
         await log("Updating...");
         
@@ -44,8 +55,7 @@ async function runTradingAlgorithm(log,interval=5) {
         do {
           if (attempts > 0) {
             await log(`NIFTY50 unchanged. Refreshing again... Attempt ${attempts}/${maxAttempts}`);
-            await driver.navigate().refresh();
-            await new Promise(resolve => setTimeout(resolve, 3000)); // Wait for page to reload
+            await new Promise(resolve => setTimeout(resolve, 500)); // Wait for page to reload
           }
 
           newData = await fetchData(false ,interval);
@@ -90,12 +100,12 @@ async function runTradingAlgorithm(log,interval=5) {
         maxCapital = Math.max(currCap, maxCapital);
         currentProfit = currCap - startCap;
         await log(`
-          time : ${new Date().toLocaleString()}
-          Update (${interval}minutes later):
-          ${message}
-            *NIFTY50: ${NIFTY50}
-            *MACD: ${MACD}
-            *SIGNAL: ${SIGNAL}
+          🕛: ${new Date().toLocaleString()}
+          ⌛: (${interval}minutes later):
+          💭${message}
+            💰NIFTY50: ${NIFTY50}
+            📉MACD: ${MACD}
+            📈SIGNAL: ${SIGNAL}
             ->Current Cap: ${currCap}
                 ->Balance: ${balance}
                 ->Shares : ${shares}

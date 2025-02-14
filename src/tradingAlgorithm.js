@@ -1,19 +1,19 @@
 import {fetchData} from './YF_components/fetchData_YahooFinance.js';
 
-async function runTradingAlgorithm(log) {
+async function runTradingAlgorithm(log,interval=5) {
   try {
     let sharePriceElement, macdElement, signalLineElement;
     // let NIFTY50, MACD, SIGNAL;
     let balance, shares = 5, prevN50, prevMACD, prevSIGNAL, currentProfit=0, maxCapital, currCap;
-    const t = 4.97; // Update interval in minutes
+     // Update interval in minutes
 
-    let { nifty50, macd, signal } = await fetchData();
+    let { nifty50, macd, signal } = await fetchData(false ,interval);
     let NIFTY50 = nifty50;
     let MACD = macd;
     let SIGNAL = signal;
     // Initialize trading variables
     balance = 5* NIFTY50;
-    const startCap = balance;
+    const startCap = 2*balance;
     maxCapital = balance;
     prevN50 = NIFTY50;
     prevMACD = MACD;
@@ -31,11 +31,10 @@ async function runTradingAlgorithm(log) {
 
     while (true) {
       try {
-        await log(`Waiting ${t} minute(s) to update...`);
-        await new Promise(resolve => setTimeout(resolve,  t*60000));
+        await log(`Waiting ${interval} minute(s) to update...`);
+        await new Promise(resolve => setTimeout(resolve,  interval*60000));
         // process.stdout.write('\x1b[1A\x1b[K');
-        await log("Updating...4");
-        await driver.navigate().refresh();
+        await log("Updating...");
         
         let newData;
         let attempts = 0;
@@ -49,7 +48,7 @@ async function runTradingAlgorithm(log) {
             await new Promise(resolve => setTimeout(resolve, 3000)); // Wait for page to reload
           }
 
-          newData = await fetchData();
+          newData = await fetchData(false ,interval);
           attempts++;
         } while (attempts < maxAttempts && newData.NIFTY50 === prevN50);
 
@@ -92,7 +91,7 @@ async function runTradingAlgorithm(log) {
         currentProfit = currCap - startCap;
         await log(`
           time : ${new Date().toLocaleString()}
-          Update (${t}minutes later):
+          Update (${interval}minutes later):
           ${message}
             *NIFTY50: ${NIFTY50}
             *MACD: ${MACD}

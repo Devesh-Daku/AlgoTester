@@ -1,5 +1,5 @@
 async function getNiftyData(interval = "5m") {
-    const url = `https://query1.finance.yahoo.com/v8/finance/chart/%5ENSEI?interval=${interval}&range=1d`;
+    const url = `https://query1.finance.yahoo.com/v8/finance/chart/%5ENSEI?interval=${interval}&range=5d`;
 
     try {
         const response = await fetch(url);
@@ -25,8 +25,10 @@ async function getNiftyData(interval = "5m") {
             signalLine = new Array(macdLine.length).fill(macdLine[0]); // Prevent undefined issue
         }
 
-        const signalDelta = -0.67;
-        const macdDelta = -1.462;
+        const macdDelta = -.962;
+        const signalDelta = -1.37;
+        // const macdDelta = 0;
+        // const singalDelta = 0;
         macdLine = macdLine.map(value => value + macdDelta);
         signalLine = signalLine.map(value => value + signalDelta);
 

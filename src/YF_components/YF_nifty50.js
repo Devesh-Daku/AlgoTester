@@ -1,5 +1,7 @@
-async function fetchNiftyData() {
-    const url = `https://query1.finance.yahoo.com/v8/finance/chart/%5ENSEI?interval=5m&range=1d`;
+// import {fetch} from 'node-fetch';
+
+async function fetchNiftyData(time='5m') {
+    const url = `https://query1.finance.yahoo.com/v8/finance/chart/%5ENSEI?interval=${time}&range=5d`;
 
     try {
         const response = await fetch(url);

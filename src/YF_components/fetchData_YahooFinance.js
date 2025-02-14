@@ -1,10 +1,10 @@
 import { fetchNiftyData } from "./YF_nifty50.js";
 import { getNiftyData } from "./YF_macd_signal.js";
 
-async function fetchData(print = false) {
+async function fetchData(print = true , interval = 5) {
     try {
-        const niftyData = await fetchNiftyData();
-        const macdData = await getNiftyData("5m");
+        const niftyData = await fetchNiftyData(`${interval}m`);
+        const macdData = await getNiftyData(`${interval}m`);
 
         if (niftyData.error) console.error(niftyData.error);
         if (macdData.error) console.error(macdData.error);
@@ -38,4 +38,4 @@ export { fetchData };
 // setInterval(fetchData, 5 * 60 * 1000);
 
 // Run immediately on start
-// fetchData();
+// fetchData(true);

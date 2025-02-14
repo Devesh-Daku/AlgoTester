@@ -16,7 +16,7 @@ const email = 'email';
   try {
     // await driver.get(url);
     // await driver.wait(until.elementLocated(By.css('body')), 10000);
-    await runTradingAlgorithm(log);
+    await runTradingAlgorithm(log,2);
   } catch (error) {
     console.error('Error:', error);
   } finally {

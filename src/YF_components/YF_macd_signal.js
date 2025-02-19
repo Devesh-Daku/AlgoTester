@@ -5,51 +5,54 @@ async function getNiftyData(interval = "5m") {
         const response = await fetch(url);
         const data = await response.json();
 
-        const result = data.chart.result[0];
-        const closePrices = result.indicators.quote[0].close;
+        // Validate response structure
+        if (!data.chart || !data.chart.result || !data.chart.result[0]) {
+            throw new Error("Invalid response structure from API");
+        }
 
-        if (!closePrices || closePrices.length < 26) {
+        const result = data.chart.result[0];
+        if (!result.indicators || !result.indicators.quote || !result.indicators.quote[0].close) {
+            throw new Error("Missing close price data from API response");
+        }
+
+        const closePrices = result.indicators.quote[0].close.filter(price => price !== null); // Remove null values
+
+        if (closePrices.length < 26) {
             return { error: "Not enough data to calculate MACD." };
         }
 
-        // Calculate MACD Line properly by aligning indexes
-        const ema12 = await calculateEMA(closePrices, 12);
-        const ema26 = await calculateEMA(closePrices, 26);
-        let macdLine = ema12.slice(-ema26.length).map((value, index) => value - ema26[index]);
+        // Compute EMAs
+        const ema12 = calculateEMA(closePrices, 12);
+        const ema26 = calculateEMA(closePrices, 26);
 
-        // Ensure Signal Line has enough data
-        let signalLine;
-        if (macdLine.length >= 9) {
-            signalLine = await  calculateEMA(macdLine, 9);
-        } else {
-            signalLine = new Array(macdLine.length).fill(macdLine[0]); // Prevent undefined issue
+        // Align EMA indices
+        const macdLine = ema12.slice(-ema26.length).map((value, index) => value - ema26[index]);
+
+        if (macdLine.length < 9) {
+            return { error: "Not enough MACD values to calculate the signal line." };
         }
 
-        // const macdDelta = -.962;
-        
-        // const signalDelta = -1.37;
-        // const macdDelta = 0;
-        // const singalDelta = 0;
-        // macdLine = macdLine.map(value => value + macdDelta);
-        // signalLine = signalLine.map(value => value + signalDelta);
+        // Compute Signal Line on the last 9 MACD values
+        const signalLine = calculateEMA(macdLine.slice(-9), 9);
 
-
-        const latestIndex = macdLine.length - 1;
-        const signalIndex = signalLine.length - 1; // Ensure correct index
+        // Get latest values
+        const latestMacd = macdLine[macdLine.length - 1];
+        const latestSignal = signalLine[signalLine.length - 1];
 
         return {
-            macd: macdLine[latestIndex],
-            signal: signalLine[signalIndex] || macdLine[latestIndex], // Fallback to MACD if undefined
-            // histogram: macdHistogram[latestIndex]
+            macd: parseFloat(latestMacd.toFixed(2)),  // Ensure precision
+            signal: parseFloat(latestSignal.toFixed(2))
         };
+
     } catch (error) {
         return { error: `Failed to fetch MACD data: ${error.message}` };
     }
 }
 
-
 // Function to calculate EMA
 function calculateEMA(prices, period) {
+    if (prices.length < period) return [];
+
     const k = 2 / (period + 1);
     let emaArray = [];
     let ema = prices.slice(0, period).reduce((sum, price) => sum + price, 0) / period;

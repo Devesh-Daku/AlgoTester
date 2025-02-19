@@ -1,6 +1,6 @@
 import {fetchData} from './YF_components/fetchData_YahooFinance.js';
 
-async function runTradingAlgorithm(log,interval=5) {
+async function runTradingAlgorithm(log,interval) {
   try {
     let sharePriceElement, macdElement, signalLineElement;
     // let NIFTY50, MACD, SIGNAL;
@@ -11,10 +11,10 @@ async function runTradingAlgorithm(log,interval=5) {
     let NIFTY50 = nifty50;
     let MACD = macd;
     let SIGNAL = signal;
-
+    let period = 30;
     if(MACD <0 && SIGNAL <0 ) {
       if(MACD < SIGNAL) shares = 2;
-      else shares = 5;
+      else shares = 4;
     }
     else if(MACD >0 && SIGNAL >0) {
       if(MACD < SIGNAL) shares = 4;
@@ -31,9 +31,11 @@ async function runTradingAlgorithm(log,interval=5) {
     prevSIGNAL = SIGNAL;
 
     await log(`🚀Initilized Values :
+      ⌛Interval: 2min , frequency 1min
       💰NIFTY50: ${NIFTY50} 
       📉 MACD: ${MACD}
       📈SIGNAL: ${SIGNAL}
+      StartCap: ${10*NIFTY50}
       MaxCapital: assuming 10x of initial Nifty value  : (${balance}) ${shares} in shares ${10-shares} in blalance.
         Balance: ${balance}
         Shares: asuming initial ${shares} shares we have.
@@ -42,9 +44,8 @@ async function runTradingAlgorithm(log,interval=5) {
 
     while (true) {
       try {
-        await log(`Waiting ${interval} minute(s) to update...`);
-        await new Promise(resolve => setTimeout(resolve,  interval*60000 -1));
-        // process.stdout.write('\x1b[1A\x1b[K');
+        await log(`Waiting ${period}s to update...`);
+        await new Promise(resolve => setTimeout(resolve, period*1000 -1.5));
         await log("Updating...");
         
         let newData;
@@ -55,7 +56,7 @@ async function runTradingAlgorithm(log,interval=5) {
         do {
           if (attempts > 0) {
             await log(`NIFTY50 unchanged. Refreshing again... Attempt ${attempts}/${maxAttempts}`);
-            await new Promise(resolve => setTimeout(resolve, 500)); // Wait for page to reload
+            await new Promise(resolve => setTimeout(resolve, 6000)); // Wait for page to reload
           }
 
           newData = await fetchData(false ,interval);
@@ -70,29 +71,26 @@ async function runTradingAlgorithm(log,interval=5) {
         NIFTY50 = nifty50;
         MACD = macd;
         SIGNAL = signal;
-        // Fetch updated elements
-        // ({ NIFTY50, MACD, SIGNAL } = await fetchData(driver));
-
         let message = '';
         // Trading logic
         if (prevMACD < prevSIGNAL && MACD > SIGNAL) {
           const cap = MACD > 0 ? Math.floor(balance / NIFTY50) : Math.floor(balance / NIFTY50 / 2);
           shares += cap;
           balance -= cap * NIFTY50;
-          message = (`BUY ${MACD > 0 ? 'HIGH' : 'LOW'}: shares bought ${cap}, current shares ${shares}\n`);
+          message = ( `🟢BUY ${MACD > 0 ? 'HIGH' : 'LOW'}: shares bought ${cap}, current shares ${shares}`);
         } else if (prevMACD > prevSIGNAL && MACD < SIGNAL) {
           if (SIGNAL > 0) {
             const cap = Math.floor(shares / 2);
             shares -= cap;
             balance += cap * NIFTY50;
-            message = (`SELL LOW: shares sold ${cap}, current shares ${shares}\n`);
+            message = (`🔴SELL LOW: shares sold ${cap}, current shares ${shares}`);
           } else {
             balance += shares * NIFTY50;
-            message = (`SELL HIGH: shares sold ${shares}, current shares 0\n`);
+            message = (`🔴SELL HIGH: shares sold ${shares}, current shares 0`);
             shares = 0;
           }
         } else {
-          message = ("NO BUY NO SELL CONTINUE...\n");
+          message = ("⏩ CONTINUE...");
         }
 
         // Update capital and profit/loss
@@ -101,8 +99,8 @@ async function runTradingAlgorithm(log,interval=5) {
         currentProfit = currCap - startCap;
         await log(`
           🕛: ${new Date().toLocaleString()}
-          ⌛: (${interval}minutes later):
-          💭${message}
+          ⌛: ${period}s later:
+          💭 ${message}
             💰NIFTY50: ${NIFTY50}
             📉MACD: ${MACD}
             📈SIGNAL: ${SIGNAL}
